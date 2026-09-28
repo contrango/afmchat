@@ -21,6 +21,7 @@ flowchart LR
 ### Chat und Modell
 
 - Die Chat-Ansicht nutzt `LanguageModelSession` für Folgefragen im selben Gespräch.
+- Ein frei editierbarer System-Prompt in den Einstellungen gibt das grundlegende Verhalten vor. Er wird lokal in `UserDefaults` gespeichert und beim Erzeugen jeder neuen Modellanfrage verwendet. Der System-Prompt gilt auch für neue Nachrichten in bestehenden Chats.
 - Die App prüft `SystemLanguageModel.default.availability` und zeigt `SystemLanguageModel.default.variant.displayName` an.
 - Die App fordert keinen Modellnamen an und erzwingt nicht Advanced. macOS stellt die Standardvariante bereit.
 
@@ -40,5 +41,5 @@ flowchart LR
 ## Gespeicherte Daten
 
 - Chatverlauf und Foundation-Models-Transkript: `~/Library/Application Support/FMChat/conversations.json`.
-- App-Einstellungen werden lokal in `UserDefaults` gespeichert.
+- App-Einstellungen und der System-Prompt werden lokal in `UserDefaults` gespeichert.
 - Der sichtbare App- und Xcode-Projektname ist `AFM Chat`. Historische interne Bezeichner wie Bundle-ID, UserDefaults-Schlüssel und Chat-Speicherpfad enthalten weiterhin `FMChat`, damit bestehende Installationen und Daten erhalten bleiben.

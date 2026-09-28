@@ -39,4 +39,11 @@
 
 ## Kopfzeile zeigt weiterhin den alten Text
 
-Wenn du noch `Foundation Model · Auf diesem Mac` siehst, laeuft die alte installierte App. Version 1.2 zeigt `Aktives Modell: AFM 3 Core Advanced` oder die von macOS gemeldete Variante. Beende die alte App, oeffne das Projekt aus dem Version-1.2-ZIP, waehle **Product > Clean Build Folder** und starte genau diesen Build. Die Chatdaten bleiben beim Ersetzen der App unter `~/Library/Application Support/FMChat` erhalten.
+Wenn du noch `Foundation Model · Auf diesem Mac` siehst, laeuft die alte installierte App. Version 1.3 zeigt `Aktives Modell: AFM 3 Core Advanced` oder die von macOS gemeldete Variante. Beende die alte App, oeffne das Projekt aus dem Version-1.3-ZIP, waehle **Product > Clean Build Folder** und starte genau diesen Build. Die Chatdaten bleiben beim Ersetzen der App unter `~/Library/Application Support/FMChat` erhalten.
+
+
+## „Hardened Runtime is Not Enabled“ beim Upload
+
+- Verwende ein neues Build aus dem aktualisierten Xcode-Projekt. Das App-Target aktiviert `ENABLE_HARDENED_RUNTIME` für Debug und Release; die Buildnummer wurde auf 5 erhöht.
+- Öffne in Xcode das Target **AFM Chat** und prüfe unter **Signing & Capabilities**, dass **Hardened Runtime** aktiv ist.
+- Erstelle danach ein neues Archiv über **Product > Archive** und lade dieses Archiv mit der passenden Signierung erneut hoch. Ein bereits erstelltes altes Archiv wird durch die Projekteinstellung nicht nachträglich geändert.

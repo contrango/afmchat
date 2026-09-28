@@ -278,6 +278,7 @@ struct ChatView: View {
     @State private var webStatus = "Web-Dienste werden verbunden ..."
     @State private var mcpManager = MCPServiceManager()
     @AppStorage(AppConfiguration.userDefaultsKey) private var configurationJSON = AppConfiguration.defaultJSON
+    @AppStorage(AppConfiguration.systemPromptUserDefaultsKey) private var configuredSystemPrompt = AppConfiguration.defaultSystemPrompt
     @State private var needsWebReconnect = false
     @State private var session = LanguageModelSession(instructions: "You are a helpful assistant. Respond in the user's language.")
     @FocusState private var composerFocused: Bool
@@ -1106,7 +1107,8 @@ struct ChatView: View {
             tools.append(MCPWebFetchTool(manager: mcpManager))
             tools.append(MCPBrowserReadTool(manager: mcpManager))
         }
-        let baseInstructions = "You are a helpful, clear assistant. Respond in the language used by the user. Keep answers concise unless the user asks for detail."
+        let configuredInstructions = configuredSystemPrompt.trimmingCharacters(in: .whitespacesAndNewlines)
+        let baseInstructions = configuredInstructions.isEmpty ? AppConfiguration.defaultSystemPrompt : configuredInstructions
         var webInstructions = ""
         if webSearchReady {
             webInstructions += " For current questions, use web_search. It takes a single query string. If the search fails, do not answer from guesses."

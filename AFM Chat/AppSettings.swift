@@ -4,6 +4,8 @@ import UniformTypeIdentifiers
 
 struct AppConfiguration: Codable, Equatable, Sendable {
     static let userDefaultsKey = "FMChat.configuration"
+    static let systemPromptUserDefaultsKey = "FMChat.systemPrompt"
+    static let defaultSystemPrompt = "Du bist ein hilfreicher, klarer Assistent. Antworte in der Sprache des Nutzers. Halte Antworten kurz, sofern nicht ausdrücklich mehr Details gewünscht sind."
     static let defaults = AppConfiguration(
         temporaryDirectoryPath: "",
         dockerExecutablePath: "",
@@ -47,6 +49,7 @@ struct AppConfiguration: Codable, Equatable, Sendable {
 struct AppSettingsView: View {
     @AppStorage(AppConfiguration.userDefaultsKey) private var configurationJSON = AppConfiguration.defaultJSON
     @State private var draft: AppConfiguration
+    @State private var systemPromptDraft: String = AppConfiguration.defaultSystemPrompt
     @State private var validationMessage: String?
     @State private var savedMessage: String?
 
@@ -72,6 +75,29 @@ struct AppSettingsView: View {
                             .disabled(draft.temporaryDirectoryPath.isEmpty)
                     }
                     Text("Die App legt während des Einlesens kurzzeitig eine Kopie der Datei im Unterordner „FMChat“ ab und löscht sie danach. Chatverläufe bleiben im bisherigen App-Speicherort.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Section("System-Prompt") {
+                Text("Hier legst du fest, wie sich das Modell grundsätzlich verhalten soll. Diese Anweisung gilt für neue Nachrichten in allen Chats.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                TextEditor(text: $systemPromptDraft)
+                    .font(.system(size: 13))
+                    .frame(minHeight: 110)
+                    .padding(6)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.primary.opacity(0.15), lineWidth: 1)
+                    }
+                HStack {
+                    Button("Standardprompt wiederherstellen") {
+                        systemPromptDraft = AppConfiguration.defaultSystemPrompt
+                    }
+                    Spacer()
+                    Text("\(systemPromptDraft.count) Zeichen")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -114,6 +140,7 @@ struct AppSettingsView: View {
             HStack {
                 Button("Standardwerte wiederherstellen") {
                     draft = .defaults
+                    systemPromptDraft = AppConfiguration.defaultSystemPrompt
                     saveSettings()
                 }
                 Spacer()
@@ -123,9 +150,10 @@ struct AppSettingsView: View {
         }
         .formStyle(.grouped)
         .padding(20)
-        .frame(width: 620, height: 570)
+        .frame(width: 620, height: 700)
         .onAppear {
             draft = AppConfiguration.decode(configurationJSON)
+            systemPromptDraft = UserDefaults.standard.string(forKey: AppConfiguration.systemPromptUserDefaultsKey) ?? AppConfiguration.defaultSystemPrompt
             validationMessage = nil
             savedMessage = nil
         }
@@ -201,7 +229,10 @@ struct AppSettingsView: View {
 
         draft = cleaned
         configurationJSON = cleaned.encoded
+        let cleanedSystemPrompt = systemPromptDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+        UserDefaults.standard.set(cleanedSystemPrompt, forKey: AppConfiguration.systemPromptUserDefaultsKey)
+        systemPromptDraft = cleanedSystemPrompt
         validationMessage = nil
-        savedMessage = "Einstellungen gespeichert. Änderungen an Docker MCP und SearXNG werden übernommen."
+        savedMessage = "Einstellungen gespeichert. Der System-Prompt gilt für neue Nachrichten; Docker- und SearXNG-Änderungen werden übernommen."
     }
 }
