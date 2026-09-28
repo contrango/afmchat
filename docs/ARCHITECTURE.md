@@ -7,6 +7,9 @@ flowchart LR
     User[Benutzer] --> App[AFM Chat / SwiftUI]
     App --> Model[FoundationModels / SystemLanguageModel.default]
     App --> Local[Lokale Chats und Transkripte]
+    App -->|taegliche HTTPS-Pruefung| GH[GitHub Releases API]
+    GH -->|ZIP und SHA-256| Updater[Updater / Installationshelfer]
+    Updater -->|ersetzt Bundle und startet neu| App
     App -->|MCP über stdin/stdout| Docker[Docker CLI]
     Docker --> Gateway[Docker MCP Gateway / web_grounding]
     Gateway -->|nur bei Tool-Aufruf| Fetch[Fetch MCP-Container]
@@ -37,6 +40,12 @@ flowchart LR
 - Der Gateway verwendet das Profil `web_grounding`. Fetch und Playwright werden im Gateway bereitgestellt und von Docker MCP bei einem passenden Aufruf gestartet.
 - SearXNG läuft als eigene Webinstanz. Der MCP-Adapter erreicht sie aus seinem Container über `host.docker.internal:8888`.
 - App-seitig sind nur Such-, Fetch- und definierte lesende Browser-Tools freigegeben. Playwright-Klicks, Formularaktionen und Seitenänderungen werden nicht angeboten.
+
+## Updates
+
+- Der Updater prueft beim Start und danach taeglich, ob ein neueres stabiles GitHub-Release verfuegbar ist.
+- Vor dem Entpacken wird die Groesse und der SHA-256-Digest gegen die GitHub-Release-Metadaten geprueft. Das entpackte Bundle muss die AFM-Chat-Bundle-ID und die zum Tag passende Versionsnummer haben.
+- Zum Austausch startet die App einen kleinen lokalen Helfer, beendet sich und wird nach dem Austausch neu gestartet. Der Speicherort der `.app` muss fuer den angemeldeten Benutzer beschreibbar sein.
 
 ## Gespeicherte Daten
 

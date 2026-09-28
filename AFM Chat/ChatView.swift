@@ -252,6 +252,7 @@ private struct SavedConversation: Identifiable, Codable {
     var updatedAt: Date
 }
 
+@MainActor
 struct ChatView: View {
     @Environment(\.openSettings) private var openSettings
     @State private var conversations: [SavedConversation] = []
@@ -277,6 +278,7 @@ struct ChatView: View {
     @State private var webServicesChecked = false
     @State private var webStatus = "Web-Dienste werden verbunden ..."
     @State private var mcpManager = MCPServiceManager()
+    @State private var updater = AppUpdater()
     @AppStorage(AppConfiguration.userDefaultsKey) private var configurationJSON = AppConfiguration.defaultJSON
     @AppStorage(AppConfiguration.systemPromptUserDefaultsKey) private var configuredSystemPrompt = AppConfiguration.defaultSystemPrompt
     @State private var needsWebReconnect = false
@@ -299,10 +301,16 @@ struct ChatView: View {
         .task {
             checkModel()
             loadConversations()
+            async let updateCheck: Void = updater.checkIfNeeded()
             await connectWebServices()
+            _ = await updateCheck
+            await updater.runPeriodicChecks()
         }
         .onChange(of: configurationJSON) { oldValue, newValue in
             Task { await applyConfigurationChange(from: oldValue, to: newValue) }
+        }
+        .onChange(of: updater.errorMessage) { _, newValue in
+            if let newValue { showAlert(title: "Update fehlgeschlagen", message: newValue) }
         }
         .onChange(of: isGenerating) { _, generating in
             if !generating { Task { await reconnectWebServicesIfNeeded() } }
@@ -363,7 +371,7 @@ struct ChatView: View {
             .buttonStyle(.plain)
             .background(Color.primary.opacity(0.055), in: RoundedRectangle(cornerRadius: 9))
             .padding(.horizontal, 12)
-            .disabled(isGenerating || isProcessingUpload)
+            .disabled(isGenerating || isProcessingUpload || updater.isInstalling)
 
             Text("GESPEICHERTE CHATS")
                 .font(.system(size: 10, weight: .semibold))
@@ -405,6 +413,11 @@ struct ChatView: View {
             .padding(.horizontal, 12)
             .padding(.top, 12)
 
+            updateControl
+                .padding(.horizontal, 12)
+                .padding(.top, 8)
+                .padding(.bottom, 6)
+
             Button {
                 Task { await connectWebServices() }
             } label: {
@@ -430,7 +443,7 @@ struct ChatView: View {
                 .background(Color.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: 10))
             }
             .buttonStyle(.plain)
-            .disabled(isConnectingWeb || isGenerating || isProcessingUpload)
+            .disabled(isConnectingWeb || isGenerating || isProcessingUpload || updater.isInstalling)
             .help("Docker-MCP und SearXNG verbinden oder erneut verbinden")
             .padding(.horizontal, 12)
             .padding(.bottom, 10)
@@ -450,6 +463,70 @@ struct ChatView: View {
         }
         .frame(width: 245)
         .background(Color(nsColor: .controlBackgroundColor))
+    }
+
+    private var updateControl: some View {
+        Group {
+            if let update = updater.availableUpdate {
+                Button {
+                    Task { await updater.downloadAndInstall() }
+                } label: {
+                    HStack(spacing: 9) {
+                        if updater.isInstalling {
+                            ProgressView().controlSize(.small)
+                        } else {
+                            Image(systemName: "arrow.down.circle.fill")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(Color.accentColor)
+                        }
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(updater.isInstalling ? "Update wird installiert ..." : "Update v\(update.version) verfuegbar")
+                                .font(.system(size: 12, weight: .semibold))
+                            Text(updater.isInstalling ? "Die App startet gleich neu" : "Laden und neu starten")
+                                .font(.system(size: 10))
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer(minLength: 0)
+                    }
+                    .padding(12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.accentColor.opacity(0.09), in: RoundedRectangle(cornerRadius: 10))
+                }
+                .buttonStyle(.plain)
+                .disabled(updater.isInstalling || updater.isChecking || isGenerating || isProcessingUpload || isConnectingWeb)
+                .help("Version v\(update.version) herunterladen, installieren und AFM Chat neu starten")
+            } else {
+                Button {
+                    Task { await updater.checkNow() }
+                } label: {
+                    HStack(spacing: 9) {
+                        if updater.isChecking {
+                            ProgressView().controlSize(.small)
+                        } else {
+                            Image(systemName: "arrow.clockwise")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundStyle(.secondary)
+                        }
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(updater.isChecking ? "Suche nach Updates ..." : "Nach Updates suchen")
+                                .font(.system(size: 11, weight: .medium))
+                            Text(updater.statusMessage)
+                                .font(.system(size: 9))
+                                .foregroundStyle(.secondary)
+                                .lineLimit(2)
+                        }
+                        Spacer(minLength: 0)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 9)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: 9))
+                }
+                .buttonStyle(.plain)
+                .disabled(updater.isChecking || updater.isInstalling)
+                .help("GitHub nach einer neuen AFM-Chat-Version durchsuchen")
+            }
+        }
     }
 
     private func conversationRow(_ conversation: SavedConversation) -> some View {
@@ -473,7 +550,7 @@ struct ChatView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .disabled(isGenerating || isProcessingUpload)
+            .disabled(isGenerating || isProcessingUpload || updater.isInstalling)
 
             Button(role: .destructive) {
                 deleteConversation(conversation)
@@ -488,7 +565,7 @@ struct ChatView: View {
             .help("Chat loeschen")
             .accessibilityLabel("Chat loeschen")
             .opacity(isHovered || isActive ? 1 : 0)
-            .disabled(isGenerating || isProcessingUpload)
+            .disabled(isGenerating || isProcessingUpload || updater.isInstalling)
         }
         .background(isActive ? Color.primary.opacity(0.07) : (isHovered ? Color.primary.opacity(0.035) : .clear), in: RoundedRectangle(cornerRadius: 8))
         .onHover { inside in hoveredConversationID = inside ? conversation.id : nil }
@@ -741,7 +818,7 @@ struct ChatView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .disabled(isGenerating || isProcessingUpload || pendingUploads.count >= 3)
+                .disabled(isGenerating || isProcessingUpload || updater.isInstalling || pendingUploads.count >= 3)
                 .help("Dateien anhaengen (maximal 3)")
                 .accessibilityLabel("Datei anhaengen")
 
@@ -751,7 +828,7 @@ struct ChatView: View {
                     .lineLimit(1...6)
                     .focused($composerFocused)
                     .onSubmit { sendMessage() }
-                    .disabled(!modelReady || isGenerating || isProcessingUpload)
+                    .disabled(!modelReady || isGenerating || isProcessingUpload || updater.isInstalling)
 
                 Button(action: sendMessage) {
                     Image(systemName: isGenerating ? "hourglass" : "arrow.up")
@@ -793,7 +870,7 @@ struct ChatView: View {
     }
 
     private var canSend: Bool {
-        modelReady && !isGenerating && !isProcessingUpload && !isConnectingWeb && !draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        modelReady && !isGenerating && !isProcessingUpload && !updater.isInstalling && !isConnectingWeb && !draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     private var currentTitle: String {
@@ -903,7 +980,7 @@ struct ChatView: View {
 
     private func sendMessage() {
         let text = draft.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !text.isEmpty, modelReady, !isGenerating, !isProcessingUpload else { return }
+        guard !text.isEmpty, modelReady, !isGenerating, !isProcessingUpload, !updater.isInstalling else { return }
         let attachments = pendingUploads
         let priorMessages = messages
         let modelPrompt = makeModelPrompt(question: text, uploads: attachments, history: priorMessages)
@@ -985,7 +1062,7 @@ struct ChatView: View {
     }
 
     private func handleFileDrop(providers: [NSItemProvider]) -> Bool {
-        guard !isGenerating, !isProcessingUpload else { return false }
+        guard !isGenerating, !isProcessingUpload, !updater.isInstalling else { return false }
         let fileProviders = providers.filter {
             $0.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier)
         }

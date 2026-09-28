@@ -164,7 +164,7 @@ private actor MCPStdioClient {
         _ = try request("initialize", parameters: [
             "protocolVersion": "2024-11-05",
             "capabilities": [:],
-            "clientInfo": ["name": "AFM Chat", "version": "1.3"]
+            "clientInfo": ["name": "AFM Chat", "version": "1.4"]
         ])
         try sendNotification("notifications/initialized")
     }
