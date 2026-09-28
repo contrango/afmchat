@@ -1,6 +1,6 @@
 # AFM Chat
 
-AFM Chat ist eine native macOS-Chat-App für Apples Foundation Models. Sie nutzt Apples lokales Swift-Framework, speichert Gespräche lokal und kann optionale Web-Recherche über Docker MCP und SearXNG einbinden.
+AFM Chat v1.2 ist eine native macOS-Chat-App für Apples Foundation Models. Sie nutzt Apples lokales Swift-Framework, speichert Gespräche lokal und kann optionale Web-Recherche über Docker MCP und SearXNG einbinden.
 
 **GitHub:** https://github.com/contrango/afmchat
 
@@ -18,7 +18,7 @@ AFM Chat ist eine native macOS-Chat-App für Apples Foundation Models. Sie nutzt
 - Ein Mac, auf dem Apple Foundation Models verfügbar sind.
 - Optional für Web-Recherche: Docker Desktop mit MCP Toolkit sowie eine erreichbare SearXNG-Instanz.
 
-## Bauen und starten
+## Bauen und starten (Version 1.2, Build 3)
 
 1. `AFM Chat.xcodeproj` in Xcode öffnen.
 2. Das Scheme `AFM Chat` und den Mac als Run Destination auswählen.
@@ -27,8 +27,8 @@ AFM Chat ist eine native macOS-Chat-App für Apples Foundation Models. Sie nutzt
 Alternativ im Projektordner:
 
 ```sh
-xcodebuild -project "AFM Chat.xcodeproj" -scheme "AFM Chat" -configuration Debug -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
-open "build/Build/Products/Debug/AFM Chat.app"
+xcodebuild -project "AFM Chat.xcodeproj" -scheme "AFM Chat" -configuration Debug -derivedDataPath build-v1.2 CODE_SIGNING_ALLOWED=NO build
+open "build-v1.2/Build/Products/Debug/AFM Chat.app"
 ```
 
 ## Foundation Model

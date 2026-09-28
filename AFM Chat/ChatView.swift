@@ -530,11 +530,10 @@ struct ChatView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(currentTitle)
                     .font(.system(size: 14, weight: .semibold))
-                Text(modelDisplayName)
+                Text("Aktives Modell: \(SystemLanguageModel.default.variant.displayName)")
                     .font(.system(size: 11))
                     .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .help("Aktive Modellvariante, wie von SystemLanguageModel.default gemeldet")
+                    .help("Direkte Modellanzeige aus SystemLanguageModel.default.variant.displayName")
             }
             Spacer()
             HStack(spacing: 6) {
