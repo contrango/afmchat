@@ -39,7 +39,7 @@
 
 ## Kopfzeile zeigt weiterhin den alten Text
 
-Wenn du noch `Foundation Model · Auf diesem Mac` siehst, laeuft die alte installierte App. Version 1.4 zeigt `Aktives Modell: AFM 3 Core Advanced` oder die von macOS gemeldete Variante. Beende die alte App, oeffne das Projekt aus dem Version-1.4-ZIP, waehle **Product > Clean Build Folder** und starte genau diesen Build. Die Chatdaten bleiben beim Ersetzen der App unter `~/Library/Application Support/FMChat` erhalten.
+Wenn du noch `Foundation Model · Auf diesem Mac` siehst, laeuft die alte installierte App. Version 1.5 zeigt `Aktives Modell: AFM 3 Core Advanced` oder die von macOS gemeldete Variante. Beende die alte App, oeffne das Projekt aus dem Version-1.5-ZIP, waehle **Product > Clean Build Folder** und starte genau diesen Build. Die Chatdaten bleiben beim Ersetzen der App unter `~/Library/Application Support/FMChat` erhalten.
 
 
 ## „Hardened Runtime is Not Enabled“ beim Upload
@@ -52,7 +52,7 @@ Wenn du noch `Foundation Model · Auf diesem Mac` siehst, laeuft die alte instal
 ## Es wird kein Update gefunden
 
 - Der Updater prueft das neueste stabile Release unter `https://github.com/contrango/afmchat/releases`. Ein manuelles Pruefen ist ueber den Button in der Seitenleiste moeglich.
-- Das Release braucht ein App-ZIP, zum Beispiel `AFM.Chat.V1.5.ZIP`, und einen SHA-256-Digest in den GitHub-Release-Metadaten. Automatisch erzeugte Source-Code-ZIPs werden absichtlich nicht verwendet.
+- Das Release braucht ein App-ZIP, zum Beispiel `AFM.Chat.V1.6.ZIP`, und einen SHA-256-Digest in den GitHub-Release-Metadaten. Automatisch erzeugte Source-Code-ZIPs werden absichtlich nicht verwendet.
 - Die Versionsnummer im Xcode-Projekt, in `Info.plist` und im Release-Tag muessen uebereinstimmen. Die Release-Version muss groesser sein als die installierte Marketing-Version.
 
 ## Update kann die installierte App nicht ersetzen

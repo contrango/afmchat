@@ -1,4 +1,4 @@
-# Version 1.4 auf GitHub veroeffentlichen
+# Version 1.5 auf GitHub veroeffentlichen
 
 Das Repository enthaelt bereits einen Commit. Fuehre daher keine erneute Initialisierung aus.
 
@@ -9,13 +9,13 @@ git clone https://github.com/contrango/afmchat.git
 cd afmchat
 ```
 
-2. Entpacke `afmchat-github-repository-v1.4.zip` in einen temporaeren Ordner. Kopiere den Inhalt des darin enthaltenen Ordners `afmchat` in den geklonten Ordner und bestaetige das Ueberschreiben geaenderter Dateien. Ersetze dabei nicht den versteckten `.git`-Ordner.
+2. Entpacke `afmchat-github-repository-v1.5.zip` in einen temporaeren Ordner. Kopiere den Inhalt des darin enthaltenen Ordners `afmchat` in den geklonten Ordner und bestaetige das Ueberschreiben geaenderter Dateien. Ersetze dabei nicht den versteckten `.git`-Ordner.
 
 Zum Beispiel, wenn das ZIP in `~/Downloads` liegt:
 
 ```sh
-unzip -o ~/Downloads/afmchat-github-repository-v1.4.zip -d /tmp/afmchat-v1.4
-cp -R /tmp/afmchat-v1.4/afmchat/. .
+unzip -o ~/Downloads/afmchat-github-repository-v1.5.zip -d /tmp/afmchat-v1.5
+cp -R /tmp/afmchat-v1.5/afmchat/. .
 ```
 
 3. Fuege die Aenderungen hinzu und veroeffentliche sie:
@@ -23,7 +23,7 @@ cp -R /tmp/afmchat-v1.4/afmchat/. .
 ```sh
 git add -A
 git rm --cached --ignore-unmatch .DS_Store
-git commit -m "Add automatic GitHub updates (v1.4)"
+git commit -m "Add project workspaces with local keyword search (v1.5)"
 git push origin main
 ```
 
@@ -38,12 +38,12 @@ GitHub muss dich authentifizieren; dein Konto benoetigt Schreibrechte fuer das R
 
 ## macOS-App erneut hochladen
 
-Für einen Upload muss ein neues Archiv mit Hardened Runtime erstellt werden. Im App-Target ist `ENABLE_HARDENED_RUNTIME = YES` gesetzt. Prüfe die Option zusätzlich in Xcode unter **Signing & Capabilities**, wähle das passende Signing-Team und erstelle das Archiv neu. Der aktuelle Quellstand verwendet Version 1.4, Build 1.
+Für einen Upload muss ein neues Archiv mit Hardened Runtime erstellt werden. Im App-Target ist `ENABLE_HARDENED_RUNTIME = YES` gesetzt. Prüfe die Option zusätzlich in Xcode unter **Signing & Capabilities**, wähle das passende Signing-Team und erstelle das Archiv neu. Der aktuelle Quellstand verwendet Version 1.5, Build 1.
 
 
 ## Release-Datei fuer den Updater
 
-- Erstelle und signiere ein neues Archiv mit Version 1.4 und Build 1.
-- Lade das fertige `.app` als ZIP zum GitHub-Release hoch, zum Beispiel mit dem Namen `AFM.Chat.V1.4.ZIP`. Source-Code-ZIPs werden vom Updater nicht ausgewaehlt.
-- Verwende einen passenden stabilen Tag wie `v1.4`. Die Kurzversion im App-Bundle muss mit dem Tag uebereinstimmen. GitHub muss den SHA-256-Digest fuer das Release-Asset ausweisen; der Updater prueft diesen vor der Installation.
+- Erstelle und signiere ein neues Archiv mit Version 1.5 und Build 1.
+- Lade das fertige `.app` als ZIP zum GitHub-Release hoch, zum Beispiel mit dem Namen `AFM.Chat.V1.5.ZIP`. Source-Code-ZIPs werden vom Updater nicht ausgewaehlt.
+- Verwende einen passenden stabilen Tag wie `v1.5`. Die Kurzversion im App-Bundle muss mit dem Tag uebereinstimmen. GitHub muss den SHA-256-Digest fuer das Release-Asset ausweisen; der Updater prueft diesen vor der Installation.
 - Der Updater prueft einmal taeglich automatisch und kann zusaetzlich manuell ueber den Button in der Seitenleiste gestartet werden.

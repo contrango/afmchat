@@ -28,6 +28,13 @@ flowchart LR
 - Die App prüft `SystemLanguageModel.default.availability` und zeigt `SystemLanguageModel.default.variant.displayName` an.
 - Die App fordert keinen Modellnamen an und erzwingt nicht Advanced. macOS stellt die Standardvariante bereit.
 
+### Projekte
+
+- Projekte speichern Namen, Projekt-Prompt und Dokumentmetadaten. Gespeicherte Chats koennen ueber eine optionale `projectID` einem Projekt zugeordnet werden; alte Chats ohne dieses Feld werden als allgemeine Chats geladen.
+- Projekttexte und lokale Vision-Analysen liegen unter `~/Library/Application Support/FMChat/Projects`. Originaldateien werden nicht dauerhaft kopiert.
+- Die Suche ist rein lokal und lexikalisch: Text wird in Abschnitte zerlegt und mit BM25 anhand gemeinsamer Stichwoerter bewertet. Es werden hoechstens vier passende Abschnitte und ein begrenztes Zeichenbudget an das Modell uebergeben. Embeddings oder semantische Suche gibt es nicht.
+- PDF-Abschnitte behalten den Dateinamen und, wenn vorhanden, die Seitenzahl. Projekt-Prompts werden als sessionspezifische Instructions kombiniert; globale Einstellungen bleiben davon getrennt.
+
 ### Dateien
 
 - PDFs und Text-/Quelldateien werden lokal eingelesen; die daraus gewonnenen Inhalte werden in den Chat-Kontext aufgenommen.
