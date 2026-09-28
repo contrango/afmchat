@@ -32,7 +32,7 @@ flowchart LR
 
 - Projekte speichern Namen, Projekt-Prompt und Dokumentmetadaten. Gespeicherte Chats koennen ueber eine optionale `projectID` einem Projekt zugeordnet werden; alte Chats ohne dieses Feld werden als allgemeine Chats geladen.
 - Projekttexte und lokale Vision-Analysen liegen unter `~/Library/Application Support/FMChat/Projects`. Originaldateien werden nicht dauerhaft kopiert.
-- Die Suche ist rein lokal und lexikalisch: Text wird in Abschnitte zerlegt und mit BM25 anhand gemeinsamer Stichwoerter bewertet. Es werden hoechstens vier passende Abschnitte und ein begrenztes Zeichenbudget an das Modell uebergeben. Embeddings oder semantische Suche gibt es nicht.
+- Die Suche ist lokal und hybrid: sprachspezifische Satz-Embeddings aus Apples NaturalLanguage-Framework werden mit BM25-Stichworttreffern kombiniert. Vektoren und Abschnitte werden lokal als Projektindex gespeichert; geaenderte Dokumente erzwingen einen Neuaufbau. Bei nicht unterstuetzten Sprachen faellt die App auf BM25 zurueck. Hoechstens vier passende Abschnitte und ein begrenztes Zeichenbudget gehen an das Modell.
 - PDF-Abschnitte behalten den Dateinamen und, wenn vorhanden, die Seitenzahl. Projekt-Prompts werden als sessionspezifische Instructions kombiniert; globale Einstellungen bleiben davon getrennt.
 
 ### Dateien

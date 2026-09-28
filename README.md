@@ -1,6 +1,6 @@
 # AFM Chat
 
-AFM Chat v1.5 ist eine native macOS-Chat-App für Apples Foundation Models. Sie nutzt Apples lokales Swift-Framework, speichert Gespräche lokal und kann optionale Web-Recherche über Docker MCP und SearXNG einbinden.
+AFM Chat v1.6 ist eine native macOS-Chat-App für Apples Foundation Models. Sie nutzt Apples lokales Swift-Framework, speichert Gespräche lokal und kann optionale Web-Recherche über Docker MCP und SearXNG einbinden.
 
 **GitHub:** https://github.com/contrango/afmchat
 
@@ -12,7 +12,7 @@ AFM Chat v1.5 ist eine native macOS-Chat-App für Apples Foundation Models. Sie 
 - Optionale Web-Recherche über SearXNG, Fetch und einen nur lesenden Playwright-Zugriff.
 - Ein anpassbarer System-Prompt für das grundlegende Verhalten, gespeichert auf dem Mac und bei jeder neuen Anfrage berücksichtigt.
 - Prueft taeglich GitHub Releases und bietet neue Versionen als Ein-Klick-Update mit Pruefsumme und automatischem Neustart an.
-- Projekte mit eigenem Prompt, eigenen lokal gespeicherten Dokumentauszuegen und projektgebundenen Chats. Relevante Passagen werden mit einer lokalen Stichwortsuche (BM25) gefunden; es gibt keine semantische Suche.
+- Projekte mit eigenem Prompt, lokal gespeicherten Dokumentauszuegen und projektgebundenen Chats. Relevante Passagen werden mit einer lokalen hybriden Suche aus Satz-Embeddings und BM25 gefunden; der Index bleibt auf dem Mac.
 - Einstellungen für System-Prompt, temporäres Upload-Verzeichnis, Docker CLI, Docker-MCP-Profil und SearXNG.
 
 ## Voraussetzungen
@@ -21,7 +21,7 @@ AFM Chat v1.5 ist eine native macOS-Chat-App für Apples Foundation Models. Sie 
 - Ein Mac, auf dem Apple Foundation Models verfügbar sind.
 - Optional für Web-Recherche: Docker Desktop mit MCP Toolkit sowie eine erreichbare SearXNG-Instanz.
 
-## Bauen und starten (Version 1.5, Build 1)
+## Bauen und starten (Version 1.6, Build 1)
 
 1. `AFM Chat.xcodeproj` in Xcode öffnen.
 2. Das Scheme `AFM Chat` und den Mac als Run Destination auswählen.
@@ -30,8 +30,8 @@ AFM Chat v1.5 ist eine native macOS-Chat-App für Apples Foundation Models. Sie 
 Alternativ im Projektordner:
 
 ```sh
-xcodebuild -project "AFM Chat.xcodeproj" -scheme "AFM Chat" -configuration Debug -derivedDataPath build-v1.5 CODE_SIGNING_ALLOWED=NO build
-open "build-v1.5/Build/Products/Debug/AFM Chat.app"
+xcodebuild -project "AFM Chat.xcodeproj" -scheme "AFM Chat" -configuration Debug -derivedDataPath build-v1.6 CODE_SIGNING_ALLOWED=NO build
+open "build-v1.6/Build/Products/Debug/AFM Chat.app"
 ```
 
 ## Foundation Model
@@ -54,7 +54,7 @@ Die vollständige Anleitung steht in [Docker MCP und SearXNG einrichten](docs/DO
 
 Chatverläufe und Foundation-Models-Transkripte bleiben standardmäßig auf dem Mac unter `~/Library/Application Support/FMChat/conversations.json`. Uploads werden für die Verarbeitung vorübergehend im gewählten Arbeitsverzeichnis abgelegt und danach entfernt. Chatverläufe können extrahierten Text oder Analysehinweise enthalten.
 
-Web-Recherche ist nicht vollständig lokal: Suchanfragen gehen an die konfigurierte SearXNG-Instanz und können von dort an externe Suchmaschinen weitergeleitet werden. Fetch und Playwright rufen angeforderte Internetseiten ab. Sende keine vertraulichen Daten an externe Webseiten oder Suchmaschinen. Die Update-Prüfung fragt GitHub nach der neuesten Versionsnummer und den Release-Prüfdaten; das App-ZIP wird erst heruntergeladen, wenn du auf den Update-Button klickst. Projektdateien und extrahierter Inhalt werden lokal gespeichert.
+Web-Recherche ist nicht vollständig lokal: Suchanfragen gehen an die konfigurierte SearXNG-Instanz und können von dort an externe Suchmaschinen weitergeleitet werden. Fetch und Playwright rufen angeforderte Internetseiten ab. Sende keine vertraulichen Daten an externe Webseiten oder Suchmaschinen. Die Update-Prüfung fragt GitHub nach der neuesten Versionsnummer und den Release-Prüfdaten; das App-ZIP wird erst heruntergeladen, wenn du auf den Update-Button klickst. Projektdateien, extrahierter Inhalt und der lokale Embedding-Suchindex werden auf dem Mac gespeichert.
 
 ## Lizenz
 

@@ -18,7 +18,7 @@ final class AppUpdater {
     private(set) var availableUpdate: AvailableAppUpdate?
     private(set) var isChecking = false
     private(set) var isInstalling = false
-    private(set) var statusMessage = "Updates werden taeglich geprueft."
+    private(set) var statusMessage = "Updates werden täglich geprüft."
     var errorMessage: String?
 
     private static let latestReleaseAPI = URL(string: "https://api.github.com/repos/contrango/afmchat/releases/latest")!
@@ -77,11 +77,11 @@ final class AppUpdater {
             if let cachedData = try? JSONEncoder().encode(release) {
                 UserDefaults.standard.set(cachedData, forKey: Self.cachedUpdateDefaultsKey)
             }
-            statusMessage = "Version \(release.version) ist verfuegbar."
+            statusMessage = "Version \(release.version) ist verfügbar."
         } catch {
             restoreCachedUpdate()
             if availableUpdate == nil {
-                statusMessage = "Die Update-Pruefung ist fehlgeschlagen."
+                statusMessage = "Die Update-Prüfung ist fehlgeschlagen."
             }
             if showErrors { errorMessage = error.localizedDescription }
         }
@@ -95,7 +95,7 @@ final class AppUpdater {
             return
         }
         availableUpdate = update
-        statusMessage = "Version \(update.version) ist verfuegbar."
+        statusMessage = "Version \(update.version) ist verfügbar."
     }
 
     private func fetchLatestRelease() async throws -> AvailableAppUpdate {
@@ -200,7 +200,7 @@ final class AppUpdater {
                 throw UpdateFailure.checksumMismatch
             }
 
-            statusMessage = "Pruefe das App-Paket ..."
+            statusMessage = "Prüfe das App-Paket ..."
             let extractionDirectory = workDirectory.appendingPathComponent("Extracted", isDirectory: true)
             try fileManager.createDirectory(at: extractionDirectory, withIntermediateDirectories: true)
             try extractArchive(archiveURL, to: extractionDirectory)
@@ -430,17 +430,17 @@ private enum UpdateFailure: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .githubUnavailable:
-            return "GitHub ist gerade nicht erreichbar. Pruefe deine Internetverbindung und versuche es spaeter erneut."
+            return "GitHub ist gerade nicht erreichbar. Prüfe deine Internetverbindung und versuche es später erneut."
         case .noInstallAsset:
             return "Im neuesten GitHub-Release wurde kein passendes AFM-Chat-App-ZIP gefunden."
         case .invalidDownloadURL:
             return "GitHub hat keine sichere HTTPS-Downloadadresse geliefert."
         case .noChecksum:
-            return "GitHub hat fuer das App-Paket keinen SHA-256-Pruefwert geliefert. Das Update wurde aus Sicherheitsgruenden abgebrochen."
+            return "GitHub hat für das App-Paket keinen SHA-256-Prüfwert geliefert. Das Update wurde aus Sicherheitsgründen abgebrochen."
         case .invalidChecksum:
-            return "Der vom GitHub-Release gelieferte SHA-256-Pruefwert ist ungueltig."
+            return "Der vom GitHub-Release gelieferte SHA-256-Prüfwert ist ungültig."
         case .invalidVersion:
-            return "Die Versionsnummer im GitHub-Release ist ungueltig."
+            return "Die Versionsnummer im GitHub-Release ist ungültig."
         case .invalidInstalledApp:
             return "AFM Chat wird nicht aus einem .app-Paket gestartet. Installiere die App zuerst in einen App-Ordner."
         case .installLocationNotWritable:
@@ -448,9 +448,9 @@ private enum UpdateFailure: LocalizedError {
         case .downloadFailed:
             return "Das App-Paket konnte nicht von GitHub heruntergeladen werden."
         case .archiveSizeMismatch:
-            return "Die heruntergeladene Dateigroesse stimmt nicht mit GitHub ueberein."
+            return "Die heruntergeladene Dateigröße stimmt nicht mit GitHub überein."
         case .checksumMismatch:
-            return "Die SHA-256-Pruefung ist fehlgeschlagen. Das App-Paket wurde nicht installiert."
+            return "Die SHA-256-Prüfung ist fehlgeschlagen. Das App-Paket wurde nicht installiert."
         case .archiveExtractionFailed:
             return "Das App-ZIP konnte nicht sicher entpackt werden."
         case .archiveDoesNotContainSingleApp:
@@ -458,11 +458,11 @@ private enum UpdateFailure: LocalizedError {
         case .wrongAppBundle:
             return "Das heruntergeladene Paket ist nicht AFM Chat."
         case .versionDoesNotMatchRelease:
-            return "Die App-Version im ZIP stimmt nicht mit der GitHub-Release-Version ueberein."
+            return "Die App-Version im ZIP stimmt nicht mit der GitHub-Release-Version überein."
         case .versionNotNewer:
             return "Das heruntergeladene App-Paket ist nicht neuer als die installierte Version."
         case .cannotCreateUpdateFolder:
-            return "Der temporaere Update-Ordner konnte nicht angelegt werden."
+            return "Der temporäre Update-Ordner konnte nicht angelegt werden."
         }
     }
 }

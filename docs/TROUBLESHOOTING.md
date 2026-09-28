@@ -39,7 +39,7 @@
 
 ## Kopfzeile zeigt weiterhin den alten Text
 
-Wenn du noch `Foundation Model · Auf diesem Mac` siehst, laeuft die alte installierte App. Version 1.5 zeigt `Aktives Modell: AFM 3 Core Advanced` oder die von macOS gemeldete Variante. Beende die alte App, oeffne das Projekt aus dem Version-1.5-ZIP, waehle **Product > Clean Build Folder** und starte genau diesen Build. Die Chatdaten bleiben beim Ersetzen der App unter `~/Library/Application Support/FMChat` erhalten.
+Wenn du noch `Foundation Model · Auf diesem Mac` siehst, laeuft die alte installierte App. Version 1.6 zeigt `Aktives Modell: AFM 3 Core Advanced` oder die von macOS gemeldete Variante. Beende die alte App, oeffne das Projekt aus dem Version-1.6-ZIP, waehle **Product > Clean Build Folder** und starte genau diesen Build. Die Chatdaten bleiben beim Ersetzen der App unter `~/Library/Application Support/FMChat` erhalten.
 
 
 ## „Hardened Runtime is Not Enabled“ beim Upload

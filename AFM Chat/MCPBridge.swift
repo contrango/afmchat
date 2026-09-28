@@ -27,17 +27,17 @@ private enum MCPBridgeError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .dockerNotFound:
-            return "Docker CLI wurde nicht gefunden. Starte Docker Desktop und pruefe die Docker-Installation."
+            return "Docker CLI wurde nicht gefunden. Starte Docker Desktop und prüfe die Docker-Installation."
         case .invalidDockerPath(let path):
-            return "Der konfigurierte Docker-Pfad ist nicht ausfuehrbar: \(path)"
+            return "Der konfigurierte Docker-Pfad ist nicht ausführbar: \(path)"
         case .processClosed(let service, let details):
-            return "Der MCP-Prozess fuer \(service) wurde beendet, bevor er geantwortet hat.\(details.isEmpty ? "" : "\nDocker-Ausgabe: \(details)")"
+            return "Der MCP-Prozess für \(service) wurde beendet, bevor er geantwortet hat.\(details.isEmpty ? "" : "\nDocker-Ausgabe: \(details)")"
         case .requestTimedOut(let request, let details):
-            return "Zeitueberschreitung beim Warten auf \(request).\(details.isEmpty ? "" : "\nDocker-Ausgabe: \(details)")"
+            return "Zeitüberschreitung beim Warten auf \(request).\(details.isEmpty ? "" : "\nDocker-Ausgabe: \(details)")"
         case .invalidTransportOutput(let service, let details):
-            return "Ungueltige MCP-Antwort von \(service).\(details.isEmpty ? "" : "\nAusgabe: \(details)")"
+            return "Ungültige MCP-Antwort von \(service).\(details.isEmpty ? "" : "\nAusgabe: \(details)")"
         case .invalidMessage:
-            return "Der MCP-Server hat eine ungueltige JSON-RPC-Nachricht zurueckgegeben."
+            return "Der MCP-Server hat eine ungültige JSON-RPC-Nachricht zurückgegeben."
         case .remote(let message):
             return message
         case .unavailableTool(let name):
@@ -164,7 +164,7 @@ private actor MCPStdioClient {
         _ = try request("initialize", parameters: [
             "protocolVersion": "2024-11-05",
             "capabilities": [:],
-            "clientInfo": ["name": "AFM Chat", "version": "1.5"]
+            "clientInfo": ["name": "AFM Chat", "version": "1.6"]
         ])
         try sendNotification("notifications/initialized")
     }

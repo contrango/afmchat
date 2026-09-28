@@ -12,8 +12,8 @@ AFM Chat prueft beim Start, ob seit der letzten Pruefung mindestens 24 Stunden v
 
 ## Anforderungen an GitHub Releases
 
-- Verwende einen stabilen semantischen Release-Tag, zum Beispiel `v1.5`.
-- Lade das gebaute macOS-App-Bundle als ZIP-Asset hoch, zum Beispiel `AFM.Chat.V1.5.ZIP`. Der Name muss mit `AFM.Chat.` oder `AFM-Chat-` beginnen. Source-Code- und Xcode-Projekt-ZIPs werden nicht installiert.
+- Verwende einen stabilen semantischen Release-Tag, zum Beispiel `v1.6`.
+- Lade das gebaute macOS-App-Bundle als ZIP-Asset hoch, zum Beispiel `AFM.Chat.V1.6.ZIP`. Der Name muss mit `AFM.Chat.` oder `AFM-Chat-` beginnen. Source-Code- und Xcode-Projekt-ZIPs werden nicht installiert.
 - Setze `CFBundleShortVersionString` beziehungsweise `MARKETING_VERSION` passend zum Release-Tag. Der Updater ignoriert Releases, deren Version nicht hoeher ist als die installierte Version.
 - Der GitHub-Release muss fuer das Asset einen SHA-256-Digest bereitstellen. Der Updater bricht ab, wenn die Pruefsumme fehlt oder nicht stimmt.
 - Verteile ein signiertes und fuer die gewuenschte macOS-Distribution passend notarisiertes App-Bundle.
